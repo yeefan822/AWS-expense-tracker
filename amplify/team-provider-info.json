@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-awsexpensetracker-dev-ceefa-authRole",
+      "UnauthRoleArn": "arn:aws:iam::746470358053:role/amplify-awsexpensetracker-dev-ceefa-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::746470358053:role/amplify-awsexpensetracker-dev-ceefa-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-awsexpensetracker-dev-ceefa-deployment",
+      "UnauthRoleName": "amplify-awsexpensetracker-dev-ceefa-unauthRole",
+      "StackName": "amplify-awsexpensetracker-dev-ceefa",
+      "StackId": "arn:aws:cloudformation:eu-west-1:746470358053:stack/amplify-awsexpensetracker-dev-ceefa/4977c1a0-fbcc-11ef-8811-0686b42b090f",
+      "AmplifyAppId": "d1naeb99gm3gp2"
+    }
+  }
+}
