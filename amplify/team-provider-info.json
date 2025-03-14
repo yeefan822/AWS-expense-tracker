@@ -10,6 +10,11 @@
       "StackName": "amplify-awsexpensetracker-dev-ceefa",
       "StackId": "arn:aws:cloudformation:eu-west-1:746470358053:stack/amplify-awsexpensetracker-dev-ceefa/4977c1a0-fbcc-11ef-8811-0686b42b090f",
       "AmplifyAppId": "d1naeb99gm3gp2"
+    },
+    "categories": {
+      "auth": {
+        "awsexpensetracker652c12b7": {}
+      }
     }
   }
 }
