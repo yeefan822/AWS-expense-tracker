@@ -4,7 +4,7 @@
 
   </header>
   <div class="login-container">
-    <h2>Login</h2>
+    <h2>Register</h2>
     <form @submit.prevent="login">
       <div class="form-group">
         <label for="email">Email</label>
@@ -16,7 +16,7 @@
         <input type="password" id="password" v-model="password" required />
       </div>
 
-      <button type="submit" class="login-btn">Login</button>
+      <button @click="signUpp" class="login-btn">Sign up</button>
     </form>
     <p class="register-link">
       Don't have an account? <router-link to="/register">Register</router-link>
@@ -35,20 +35,9 @@ export default {
     const username = ref('');
     const password = ref('');
 
-    const signInn = async () => {
-      try {
-        await signIn(username.value, password.value);
-        alert('Login successful');
-      } catch (error) {
-        alert(error.message);
-      }
-    };
+
 
     const signUpp = async () => {
-      const signInData = {
-        username: 'testuser',
-        password: 'Test@1234'};
-
       try {
         await signUp({
           username: username.value,
@@ -63,7 +52,7 @@ export default {
       }
     };
 
-    return { username, password, signIn, signUp };
+    return { username, password, signUpp };
   }
 };
 </script>
