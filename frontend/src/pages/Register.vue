@@ -19,8 +19,18 @@
       <button @click="signUpp" class="login-btn">Sign up</button>
     </form>
     <p class="register-link">
-      Don't have an account? <router-link to="/register">Register</router-link>
+      Already have an account? <router-link to="/login">Sign in</router-link>
     </p>
+  </div>
+  <div v-if="onConfirm" class="dialog-overlay">
+    <div class="dialog-box">
+      <h3>Enter Verification Code</h3>
+      <p>A verification code was sent to your email.</p>
+
+      <input type="text" v-model="verificationCode" placeholder="Enter code" />
+      <button @click="confirmSignup">Confirm</button>
+      <button @click="onConfirm = false">Cancel</button>
+    </div>
   </div>
 </template>
 
@@ -29,30 +39,50 @@
 import { ref } from 'vue';
 import { signIn } from 'aws-amplify/auth';
 import { signUp } from 'aws-amplify/auth';
+import { confirmSignUp } from 'aws-amplify/auth';
+
 
 export default {
+
   setup() {
-    const username = ref('');
+    const email = ref('');
     const password = ref('');
+    const verificationCode = ref('');
+    const onConfirm = ref(false);
 
 
 
     const signUpp = async () => {
       try {
+        console.log("Hi")
+        console.log(email.value)
         await signUp({
-          username: username.value,
+          username: email.value,
           password: password.value,
           attributes: {
-            email: `${username.value}@example.com`
+            email: email.value
           }
         });
-        alert('Sign-up successful! Please confirm your email.');
+        onConfirm.value = true;
       } catch (error) {
         alert(error.message);
       }
     };
 
-    return { username, password, signUpp };
+    const confirmSignup = async () => {
+      try {
+        await confirmSignUp({
+          username: email.value,
+          confirmationCode: verificationCode.value
+        });
+        alert('Account confirmed successfully! You can now log in.');
+        onConfirm.value = false;
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    return { email, password, signUpp, onConfirm, confirmSignup, verificationCode };
   }
 };
 </script>
@@ -80,6 +110,31 @@ header {
   padding: 20px;
   background-color: #2c3e50;
   color: white;
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-box {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.dialog-box input {
+  margin: 10px 0;
+  padding: 8px;
+  width: 80%;
 }
 
 /* 标题 */

@@ -5,7 +5,7 @@ import Register from '@/pages/Register.vue';
 //import Expenses from '@/pages/Expenses.vue';
 
 const routes = [
-    { path: '/', component: Home },
+    { path: '/home', component: Home },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
    // { path: '/expenses', component: Expenses }
