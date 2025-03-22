@@ -1,0 +1,12 @@
+projects:
+  awsexpensetracker:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - query
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: .
