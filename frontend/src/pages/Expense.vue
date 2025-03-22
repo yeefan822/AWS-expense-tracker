@@ -24,31 +24,31 @@
     <p v-else>No expenses found.</p>
 
     <!-- Add Expense Button -->
-    <button @click="isModalOpen = true">Add Expense</button>
+    <button @click="showDialog = true">Add Expense</button>
 
     <!-- Modal for Adding Expense -->
-    <div v-if="isModalOpen" class="modal">
+    <div v-if="showDialog" class="modal">
       <div class="modal-content">
         <h3>Add a new expense</h3>
         <form @submit.prevent="addExpense">
           <div>
             <label for="userId">User ID:</label>
-            <input type="text" v-model="expenseDetails.userId" id="userId" required />
+            <input type="text" v-model="newExpense.userId" id="userId" required />
           </div>
           <div>
             <label for="amount">Amount:</label>
-            <input type="number" v-model="expenseDetails.amount" id="amount" required />
+            <input type="number" v-model="newExpense.amount" id="amount" required />
           </div>
           <div>
             <label for="category">Category:</label>
-            <input type="text" v-model="expenseDetails.category" id="category" required />
+            <input type="text" v-model="newExpense.category" id="category" required />
           </div>
           <div>
             <label for="date">Date:</label>
-            <input type="date" v-model="expenseDetails.date" id="date" required />
+            <input type="date" v-model="newExpense.date" id="date" required />
           </div>
           <button type="submit">Add Expense</button>
-          <button type="button" @click="isModalOpen = false">Cancel</button>
+          <button type="button" @click="showDialog = false">Cancel</button>
         </form>
       </div>
     </div>
