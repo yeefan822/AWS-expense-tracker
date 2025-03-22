@@ -12,7 +12,7 @@ import { ref } from 'vue';
     <main>
       <div class="welcome-section">
         <h1>Welcome to Your Expense Tracker</h1>
-        <p>Keep track of your daily expenses with eas@22@e!</p>
+        <p>Keep track of your daily expenses with Jeff.com!</p>
         <router-link to="/login" class="cta-button">Get Started</router-link>
       </div>
     </main>
@@ -22,7 +22,29 @@ import { ref } from 'vue';
     </footer>
   </div>
 </template>
+<script>
+import {onMounted, ref} from 'vue';
+import { getCurrentUser } from 'aws-amplify/auth';
 
+export default {
+  setup() {
+    const isLoggedIn = ref(false);
+    const user = ref(null);
+    onMounted(async ()=> {
+      try{
+        user.value = getCurrentUser();
+        isLoggedIn.value = true;
+      } catch (e) {
+        isLoggedIn.value = false;
+      }
+
+    });
+
+
+    return {isLoggedIn, user};
+  }
+}
+</script>
 <style scoped>
 /* Resetting margin and padding for all elements */
 * {

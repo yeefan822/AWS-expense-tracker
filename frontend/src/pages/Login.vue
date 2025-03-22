@@ -8,7 +8,7 @@
     <form @submit.prevent="login">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" v-model="email" required />
+        <input type="email" id="email" v-model="username" required />
       </div>
 
       <div class="form-group">
@@ -16,7 +16,7 @@
         <input type="password" id="password" v-model="password" required />
       </div>
 
-      <button type="submit" class="login-btn">Login</button>
+      <button @click="signInn" class="login-btn">Login</button>
     </form>
     <p class="register-link">
       Don't have an account? <router-link to="/register">Register</router-link>
@@ -28,7 +28,7 @@
 <script>
 import { ref } from 'vue';
 import { signIn } from 'aws-amplify/auth';
-import { signUp } from 'aws-amplify/auth';
+import router from "@/router/index.js";
 
 export default {
   setup() {
@@ -37,33 +37,22 @@ export default {
 
     const signInn = async () => {
       try {
-        await signIn(username.value, password.value);
-        alert('Login successful');
-      } catch (error) {
-        alert(error.message);
-      }
-    };
-
-    const signUpp = async () => {
-      const signInData = {
-        username: 'testuser',
-        password: 'Test@1234'};
-
-      try {
-        await signUp({
+        const input = {
           username: username.value,
-          password: password.value,
-          attributes: {
-            email: `${username.value}@example.com`
-          }
-        });
-        alert('Sign-up successful! Please confirm your email.');
+          password: password.value
+        };
+
+        const output = await signIn(input);
+        console.log("✅ Login successful:", output);
+        await router.push("/home");
+        return output;
       } catch (error) {
-        alert(error.message);
+        alert(error.message || "Login failure");
       }
     };
 
-    return { username, password, signIn, signUp };
+
+    return { username, password, signInn };
   }
 };
 </script>
