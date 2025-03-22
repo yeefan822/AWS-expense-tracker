@@ -1,6 +1,10 @@
 <template>
+
   <div class="expense-page">
-    <h2>Your Expenses</h2>
+    <header>
+      <div class="logo">Your expense</div>
+
+    </header>
 
     <!-- Table to display expenses -->
     <table v-if="expenses.length > 0">
@@ -125,10 +129,27 @@ export default {
 
 <style scoped>
 /* Page styles */
+
 .expense-page {
-  max-width: 800px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 2500px;
+}
+
+/* Header styling */
+header {
+  display: flex;
+  justify-content: space-between;  /* 使内容分布在左右两侧 */
+  align-items: center;             /* 垂直居中对齐 */
   padding: 20px;
+  background-color: #2c3e50;
+  color: white;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
 }
 
 table {
