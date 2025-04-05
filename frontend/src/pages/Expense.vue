@@ -77,10 +77,10 @@ export default {
     const showDialog = ref(false);
     const isSuccess = ref(false);
     const errorMessage = ref('');
+    const userId = ref(null);
 
-    const user = await getCurrentUser();
+    //const user = await getCurrentUser();
 
-    const userId = user.userId;
 
     // 绑定输入框的数据
     const newExpense = ref({
@@ -126,7 +126,19 @@ export default {
     };
 
 
-    onMounted(fetchExpenses);
+    onMounted(async () => {
+      try {
+        const user = await getCurrentUser();
+        userId.value = user.userId;
+
+        newExpense.value.userId = user.userId;
+        await fetchExpenses();
+      } catch (error) {
+        console.warn('用户未登录，跳转登录页或隐藏内容');
+
+        window.location.href = '/login';
+      }
+    });
 
     return {
       expenses,
@@ -134,7 +146,8 @@ export default {
       showDialog,
       addExpense,
       isSuccess,
-      errorMessage
+      errorMessage,
+      userId
     };
   }
 };
