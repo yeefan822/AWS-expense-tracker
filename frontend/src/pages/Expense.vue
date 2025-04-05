@@ -67,17 +67,24 @@
 import { ref, onMounted } from 'vue';
 import { generateClient } from 'aws-amplify/api';
 import { createExpense } from '../graphql/mutations.js';
-import { listExpense } from '../graphql/queries.js';
+import { listExpenses } from '../graphql/queries.js';
+import { getCurrentUser } from 'aws-amplify/auth';
 
 export default {
-  setup() {
+  async setup() {
     const client = generateClient();
     const expenses = ref([]);
     const showDialog = ref(false);
+    const isSuccess = ref(false);
+    const errorMessage = ref('');
+
+    const user = await getCurrentUser();
+
+    const userId = user.userId;
 
     // 绑定输入框的数据
     const newExpense = ref({
-      userId: '',
+      userId: userId,
       amount: null,
       category: '',
       date: ''
@@ -86,7 +93,7 @@ export default {
     // 获取数据库中的消费记录
     const fetchExpenses = async () => {
       try {
-        const result = await client.graphql({ query: listExpense });
+        const result = await client.graphql({query: listExpenses});
         expenses.value = result.data.listExpenses.items || [];
       } catch (error) {
         console.error('Error fetching expenses:', error);
@@ -96,32 +103,38 @@ export default {
     // 添加消费记录
     const addExpense = async () => {
       if (!newExpense.value.amount || !newExpense.value.category || !newExpense.value.date) {
-        alert('请填写完整信息');
+        alert('Please fill in full details');
         return;
       }
 
       try {
         await client.graphql({
           query: createExpense,
-          variables: { input: newExpense.value },
+          variables: {input: newExpense.value},
         });
 
         showDialog.value = false;
-        newExpense.value = { amount: '', category: '', date: '' };
-        await fetchExpenses(); // 重新加载数据
+        isSuccess.value = true;
+        errorMessage.value = '';
+        newExpense.value = {userId: userId, amount: null, category: '', date: ''};
+        await fetchExpenses();
       } catch (error) {
         console.error('Error adding expense:', error);
+        isSuccess.value = false;
+        errorMessage.value = '添加失败，请稍后重试';
       }
     };
 
-    // 组件加载时获取数据
+
     onMounted(fetchExpenses);
 
     return {
       expenses,
       newExpense,
       showDialog,
-      addExpense
+      addExpense,
+      isSuccess,
+      errorMessage
     };
   }
 };
