@@ -26,8 +26,8 @@
 
 
 <script>
-import { ref } from 'vue';
-import { signIn } from 'aws-amplify/auth';
+import {onMounted, ref} from 'vue';
+import {getCurrentUser, signIn} from 'aws-amplify/auth';
 import router from "@/router/index.js";
 
 export default {
@@ -50,10 +50,30 @@ export default {
         alert(error.message || "Login failure");
       }
     };
+    const checkCurrentUser = async () => {
+      try {
+        const user = await getCurrentUser();
+        console.log('Current user:', user);
+        // user.username gives you the username
+        // user.userId gives you the unique user ID (sub)
+        return user;
+      } catch (error) {
+        console.log('No user is currently signed in');
+        return null;
+      }
+    };
+
+    onMounted(
+        async () =>{
+          await checkCurrentUser();
+        }
+    )
 
 
     return { username, password, signInn };
   }
+
+
 };
 </script>
 

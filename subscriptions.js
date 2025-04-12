@@ -2,8 +2,11 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateExpense = /* GraphQL */ `
-  subscription OnCreateExpense($filter: ModelSubscriptionExpenseFilterInput) {
-    onCreateExpense(filter: $filter) {
+  subscription OnCreateExpense(
+    $filter: ModelSubscriptionExpenseFilterInput
+    $userId: String
+  ) {
+    onCreateExpense(filter: $filter, userId: $userId) {
       id
       userId
       amount
@@ -16,8 +19,11 @@ export const onCreateExpense = /* GraphQL */ `
   }
 `;
 export const onUpdateExpense = /* GraphQL */ `
-  subscription OnUpdateExpense($filter: ModelSubscriptionExpenseFilterInput) {
-    onUpdateExpense(filter: $filter) {
+  subscription OnUpdateExpense(
+    $filter: ModelSubscriptionExpenseFilterInput
+    $userId: String
+  ) {
+    onUpdateExpense(filter: $filter, userId: $userId) {
       id
       userId
       amount
@@ -30,8 +36,11 @@ export const onUpdateExpense = /* GraphQL */ `
   }
 `;
 export const onDeleteExpense = /* GraphQL */ `
-  subscription OnDeleteExpense($filter: ModelSubscriptionExpenseFilterInput) {
-    onDeleteExpense(filter: $filter) {
+  subscription OnDeleteExpense(
+    $filter: ModelSubscriptionExpenseFilterInput
+    $userId: String
+  ) {
+    onDeleteExpense(filter: $filter, userId: $userId) {
       id
       userId
       amount

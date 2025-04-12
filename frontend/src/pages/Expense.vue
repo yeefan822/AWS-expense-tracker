@@ -1,12 +1,9 @@
 <template>
+  <header>
+    <div class="logo">My Expense Tracker</div>
 
-  <div class="expense-page">
-    <header>
-      <div class="logo">Your expense</div>
-
-    </header>
-
-    <!-- Table to display expenses -->
+  </header>
+  <div>
     <table v-if="expenses.length > 0">
       <thead>
       <tr>
@@ -26,144 +23,101 @@
       </tbody>
     </table>
     <p v-else>No expenses found.</p>
-
-    <!-- Add Expense Button -->
     <button @click="showDialog = true">Add Expense</button>
-
-    <!-- Modal for Adding Expense -->
-    <div v-if="showDialog" class="modal">
-      <div class="modal-content">
-        <h3>Add a new expense</h3>
+    <div v-if="showDialog" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+      <div class="bg-white p-6 rounded shadow-md w-96">
+        <h2 class="text-xl font-semibold mb-4">Add Expense</h2>
         <form @submit.prevent="addExpense">
-          <div>
-            <label for="userId">User ID:</label>
-            <input type="text" v-model="newExpense.userId" id="userId" required />
+          <input type="date" v-model="newExpense.date" class="w-full mb-2 p-2 border rounded" required />
+          <input type="text" v-model="newExpense.description" placeholder="Description" class="w-full mb-2 p-2 border rounded" required />
+          <input type="number" v-model.number="newExpense.amount" placeholder="Amount" class="w-full mb-2 p-2 border rounded" required />
+          <div class="flex justify-end gap-2">
+            <button type="button" @click="showDialog = false" class="px-3 py-1 bg-gray-300 rounded">Cancel</button>
+            <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Add</button>
           </div>
-          <div>
-            <label for="amount">Amount:</label>
-            <input type="number" v-model="newExpense.amount" id="amount" required />
-          </div>
-          <div>
-            <label for="category">Category:</label>
-            <input type="text" v-model="newExpense.category" id="category" required />
-          </div>
-          <div>
-            <label for="date">Date:</label>
-            <input type="date" v-model="newExpense.date" id="date" required />
-          </div>
-          <button type="submit">Add Expense</button>
-          <button type="button" @click="showDialog = false">Cancel</button>
         </form>
       </div>
     </div>
-
-    <!-- Success or Error Message -->
-    <p v-if="isSuccess" class="success-message">Expense added successfully!</p>
-    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
   </div>
 </template>
-
 <script>
-import { ref, onMounted } from 'vue';
+import {onMounted, ref} from "vue";
+import {getCurrentUser} from "aws-amplify/auth";
+import { listExpenses } from '@/graphql/queries';
+import { createExpense } from '@/graphql/mutations';
 import { generateClient } from 'aws-amplify/api';
-import { createExpense } from '../graphql/mutations.js';
-import { listExpenses } from '../graphql/queries.js';
-import { getCurrentUser } from 'aws-amplify/auth';
+import {Amplify} from "aws-amplify";
 
 export default {
-  async setup() {
-    const client = generateClient();
+  setup() {
+    const client = generateClient({
+      authMode: 'userPool'
+    });
     const expenses = ref([]);
     const showDialog = ref(false);
-    const isSuccess = ref(false);
-    const errorMessage = ref('');
-    const userId = ref(null);
-
-    //const user = await getCurrentUser();
-
-
-    // 绑定输入框的数据
+    const loading = ref(true);
     const newExpense = ref({
-      userId: userId,
+      userId: null,
+      date: '',
+      description: '',
       amount: null,
-      category: '',
-      date: ''
-    });
+    })
 
-    // 获取数据库中的消费记录
+    console.log('Amplify Config', Amplify.getConfig());
+
+
+
     const fetchExpenses = async () => {
       try {
-        const result = await client.graphql({query: listExpenses});
-        expenses.value = result.data.listExpenses.items || [];
-      } catch (error) {
-        console.error('Error fetching expenses:', error);
-      }
-    };
+        const user = await getCurrentUser();
+        const client = generateClient({ authMode: 'userPool' });
 
-    // 添加消费记录
-    const addExpense = async () => {
-      if (!newExpense.value.amount || !newExpense.value.category || !newExpense.value.date) {
-        alert('Please fill in full details');
-        return;
-      }
-
-      try {
-        await client.graphql({
-          query: createExpense,
-          variables: {input: newExpense.value},
+        const result = await client.graphql({
+          query: listExpenses,
+          variables: {
+            filter: {
+              userId: { eq: user.userId } // filter by userId if needed
+            }
+          }
         });
 
-        showDialog.value = false;
-        isSuccess.value = true;
-        errorMessage.value = '';
-        newExpense.value = {userId: userId, amount: null, category: '', date: ''};
-        await fetchExpenses();
+        expenses.value = result.data.listExpenses.items;
       } catch (error) {
-        console.error('Error adding expense:', error);
-        isSuccess.value = false;
-        errorMessage.value = '添加失败，请稍后重试';
+        console.error('Failed to fetch expenses:', error);
       }
     };
 
-
-    onMounted(async () => {
+    const checkCurrentUser = async () => {
       try {
         const user = await getCurrentUser();
-        userId.value = user.userId;
-
-        newExpense.value.userId = user.userId;
-        await fetchExpenses();
+        console.log('Current user:', user);
+        // user.username gives you the username
+        // user.userId gives you the unique user ID (sub)
+        return user;
       } catch (error) {
-        console.warn('用户未登录，跳转登录页或隐藏内容');
-
-        window.location.href = '/login';
+        console.log('No user is currently signed in');
+        return null;
       }
-    });
+    }
+    onMounted(
+        async () => {
+          await fetchExpenses();
+          await checkCurrentUser();
+        }
+    )
 
-    return {
-      expenses,
-      newExpense,
-      showDialog,
-      addExpense,
-      isSuccess,
-      errorMessage,
-      userId
-    };
+    return {expenses, showDialog, newExpense};
   }
-};
+}
 </script>
 
-<style scoped>
-/* Page styles */
 
-.expense-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width: 2500px;
+<style scoped>
+.logo {
+  font-size: 24px;
+  font-weight: bold;
 }
 
-/* Header styling */
 header {
   display: flex;
   justify-content: space-between;  /* 使内容分布在左右两侧 */
@@ -171,80 +125,5 @@ header {
   padding: 20px;
   background-color: #2c3e50;
   color: white;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 8px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-button {
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-.success-message {
-  color: green;
-  font-weight: bold;
-}
-
-.error-message {
-  color: red;
-  font-weight: bold;
-}
-
-/* Modal styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-button[type="button"] {
-  background-color: #f44336;
-}
-
-button[type="button"]:hover {
-  background-color: #d32f2f;
 }
 </style>
