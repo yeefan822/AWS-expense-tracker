@@ -29,7 +29,7 @@
         <h2 class="text-xl font-semibold mb-4">Add Expense</h2>
         <form @submit.prevent="addExpense">
           <input type="date" v-model="newExpense.date" class="w-full mb-2 p-2 border rounded" required />
-          <input type="text" v-model="newExpense.description" placeholder="Description" class="w-full mb-2 p-2 border rounded" required />
+          <input type="text" v-model="newExpense.category" placeholder="Description" class="w-full mb-2 p-2 border rounded" required />
           <input type="number" v-model.number="newExpense.amount" placeholder="Amount" class="w-full mb-2 p-2 border rounded" required />
           <div class="flex justify-end gap-2">
             <button type="button" @click="showDialog = false" class="px-3 py-1 bg-gray-300 rounded">Cancel</button>
@@ -59,7 +59,7 @@ export default {
     const newExpense = ref({
       userId: null,
       date: '',
-      description: '',
+      category: '',
       amount: null,
     })
 
@@ -87,6 +87,30 @@ export default {
       }
     };
 
+    const addExpense = async () => {
+      try {
+        const user = await getCurrentUser();
+        const userId = user?.userId || user?.username;
+
+        const input = {
+          userId,
+          amount: parseFloat(newExpense.value.amount),
+          category: newExpense.value.category,
+          date: newExpense.value.date,
+        };
+
+        await client.graphql({
+          query: createExpense,
+          variables: { input },
+        });
+
+        newExpense.value = { amount: null, category: '', date: '' };
+        await fetchExpenses(); // refresh list
+      } catch (err) {
+        console.error('Failed to add expense:', err);
+      }
+    };
+
     const checkCurrentUser = async () => {
       try {
         const user = await getCurrentUser();
@@ -106,7 +130,7 @@ export default {
         }
     )
 
-    return {expenses, showDialog, newExpense};
+    return {expenses, showDialog, newExpense, addExpense};
   }
 }
 </script>
