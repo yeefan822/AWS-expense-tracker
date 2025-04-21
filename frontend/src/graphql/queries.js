@@ -37,3 +37,13 @@ export const listExpenses = /* GraphQL */ `
     }
   }
 `;
+
+export const getMonthlyExpenses = /* GraphQL */ `
+    query GetMonthlyExpenses {
+        getMonthlyExpenses {
+            total
+            __typename
+        }
+    }
+`;
+

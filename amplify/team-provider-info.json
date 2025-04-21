@@ -17,6 +17,15 @@
       },
       "api": {
         "awsexpensetracker": {}
+      },
+      "function": {
+        "getMonthlyExpenses": {
+          "deploymentBucketName": "amplify-awsexpensetracker-dev-ceefa-deployment",
+          "s3Key": "amplify-builds/getMonthlyExpenses-616b7531626e37587942-build.zip"
+        }
+      },
+      "storage": {
+        "expenses": {}
       }
     }
   }

@@ -54,6 +54,7 @@ import {onMounted, ref} from "vue";
 import {getCurrentUser} from "aws-amplify/auth";
 import { listExpenses } from '@/graphql/queries';
 import { createExpense } from '@/graphql/mutations';
+import { getMonthlyExpenses } from '@/graphql/queries';
 import { generateClient } from 'aws-amplify/api';
 import { deleteExpense as deleteExpenseMutation } from '@/graphql/mutations';
 import {Amplify} from "aws-amplify";
@@ -75,7 +76,20 @@ export default {
 
     console.log('Amplify Config', Amplify.getConfig());
 
+    const fetchMonthlyExpenses = async () => {
+      try {
+        const result = await client.graphql({
+          query: getMonthlyExpenses
+        });
 
+        const total = result.data.getMonthlyExpenses.total;
+        console.log('Total this month:', total);
+        return total;
+      } catch (err) {
+        console.error('Unable to invoke lambda:', err);
+        return null;
+      }
+    };
 
     const fetchExpenses = async () => {
       try {
@@ -149,6 +163,7 @@ export default {
         async () => {
           await fetchExpenses();
           await checkCurrentUser();
+          await fetchMonthlyExpenses();
         }
     )
 

@@ -59,5 +59,50 @@
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
     }
+  },
+  "function": {
+    "getMonthlyExpenses": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "expenses"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_getMonthlyExpenses_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getMonthlyExpenses"
+        }
+      ]
+    },
+    "AMPLIFY_function_getMonthlyExpenses_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getMonthlyExpenses"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "expenses": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    }
   }
 }

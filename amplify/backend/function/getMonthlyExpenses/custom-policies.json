@@ -1,0 +1,14 @@
+[
+  {
+    "Effect": "Allow",
+    "Action": [
+      "dynamodb:Query",
+      "dynamodb:GetItem",
+      "dynamodb:Scan"
+    ],
+    "Resource": [
+      "arn:aws:dynamodb:eu-west-1:746470358053:table/Expense-vv5crm6kdnhvvi6fhpjnzync3y-dev",
+      "arn:aws:dynamodb:eu-west-1:746470358053:table/Expense-vv5crm6kdnhvvi6fhpjnzync3y-dev/index/*"
+    ]
+  }
+]

@@ -11,3 +11,11 @@ type Expense @model @auth(rules: [
   category: String!
   date: String!
 }
+
+type Query {
+  getMonthlyExpenses: MonthlyExpenseResult @function(name: "getMonthlyExpenses-${env}") @auth(rules: [{ allow: private }])
+}
+
+type MonthlyExpenseResult {
+  total: Float @auth(rules: [{ allow: private }])
+}
