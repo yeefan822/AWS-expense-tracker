@@ -10,5 +10,10 @@
       "arn:aws:dynamodb:eu-west-1:746470358053:table/Expense-vv5crm6kdnhvvi6fhpjnzync3y-dev",
       "arn:aws:dynamodb:eu-west-1:746470358053:table/Expense-vv5crm6kdnhvvi6fhpjnzync3y-dev/index/*"
     ]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["sns:Publish"],
+    "Resource": ["arn:aws:sns:eu-west-1:746470358053:spendingAlerts"]
   }
 ]

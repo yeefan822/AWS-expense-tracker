@@ -97,6 +97,22 @@
           "resourceName": "getMonthlyExpenses"
         }
       ]
+    },
+    "AMPLIFY_function_getMonthlyExpenses_snsTopicArn": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getMonthlyExpenses"
+        }
+      ]
+    },
+    "AMPLIFY_function_getMonthlyExpenses_tableName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getMonthlyExpenses"
+        }
+      ]
     }
   },
   "storage": {

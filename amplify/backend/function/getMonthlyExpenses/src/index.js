@@ -1,17 +1,15 @@
-const { DynamoDBClient, ScanCommand } = require("@aws-sdk/client-dynamodb");
-const { unmarshall } = require("@aws-sdk/util-dynamodb");
-
 const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient();
+const sns = new AWS.SNS();
 
-const TABLE_NAME = 'Expense-vv5crm6kdnhvvi6fhpjnzync3y-dev';
+
 
 exports.handler = async (event) => {
     const userId = event.identity?.sub;
     const currentMonth = new Date().toISOString().substring(0, 7);
 
     const params = {
-        TableName: TABLE_NAME,
+        TableName: process.env.TABLE_NAME,
         FilterExpression: 'userId = :uid AND begins_with(#date, :month)',
         ExpressionAttributeValues: {
             ':uid': userId,
@@ -26,6 +24,18 @@ exports.handler = async (event) => {
         const data = await docClient.scan(params).promise();
         const total = data.Items.reduce((sum, item) => sum + (item.amount || 0), 0);
         console.log('Returning total:', total);
+
+        if (total > 2000) {
+            const message = `⚠️ User ${userId} has spent $${total} this month.`;
+            const params = {
+                TopicArn: process.env.SNS_TOPIC_ARN,
+                Message: message,
+                Subject: 'Spending Alert'
+            };
+
+            await sns.publish(params).promise();
+            console.log('Alert sent via SNS:', message);
+        }
 
 
         return {

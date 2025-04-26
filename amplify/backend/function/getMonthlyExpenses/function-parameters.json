@@ -1,4 +1,13 @@
 {
-  "lambdaLayers": []
-
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "snsTopicArn",
+      "environmentVariableName": "SNS_TOPIC_ARN"
+    },
+    {
+      "cloudFormationParameterName": "tableName",
+      "environmentVariableName": "TABLE_NAME"
+    }
+  ]
 }

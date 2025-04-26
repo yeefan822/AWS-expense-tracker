@@ -23,6 +23,12 @@
     "storageexpensesArn": {
       "Type": "String",
       "Default": "storageexpensesArn"
+    },
+    "snsTopicArn": {
+      "Type": "String"
+    },
+    "tableName": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -77,6 +83,12 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "SNS_TOPIC_ARN": {
+              "Ref": "snsTopicArn"
+            },
+            "TABLE_NAME": {
+              "Ref": "tableName"
             }
           }
         },
@@ -218,6 +230,15 @@
               "Resource": [
                 "arn:aws:dynamodb:eu-west-1:746470358053:table/Expense-vv5crm6kdnhvvi6fhpjnzync3y-dev",
                 "arn:aws:dynamodb:eu-west-1:746470358053:table/Expense-vv5crm6kdnhvvi6fhpjnzync3y-dev/index/*"
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sns:Publish"
+              ],
+              "Resource": [
+                "arn:aws:sns:eu-west-1:746470358053:spendingAlerts"
               ]
             }
           ]

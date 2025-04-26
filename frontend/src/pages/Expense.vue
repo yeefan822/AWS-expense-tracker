@@ -84,6 +84,10 @@ export default {
 
         const total = result.data.getMonthlyExpenses.total;
         console.log('Total this month:', total);
+        if(total > 1000)
+        {
+          console.log("Exceeded");
+        }
         return total;
       } catch (err) {
         console.error('Unable to invoke lambda:', err);
@@ -141,7 +145,8 @@ export default {
         });
 
         newExpense.value = { amount: null, category: '', date: '' };
-        await fetchExpenses(); // refresh list
+        await fetchExpenses();
+        await fetchMonthlyExpenses();// refresh list
       } catch (err) {
         console.error('Failed to add expense:', err);
       }
