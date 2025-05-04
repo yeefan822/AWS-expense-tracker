@@ -13,6 +13,7 @@ import { ref } from 'vue';
       <div class="welcome-section">
         <h1>Welcome to Your Expense Tracker</h1>
         <p>Keep track of your daily expenses with Jeff.com!</p>
+        <p>___</p>
         <router-link to="/login" class="cta-button">Get Started</router-link>
       </div>
     </main>

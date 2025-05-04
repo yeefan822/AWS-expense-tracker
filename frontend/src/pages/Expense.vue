@@ -10,7 +10,7 @@
       <thead>
       <tr>
         <th>ID</th>
-        <th>Category</th>
+        <th>Details</th>
         <th>Amount</th>
         <th>Date</th>
         <th> <button @click="showDialog = true" class="add-button-m1">Add Expense</button>

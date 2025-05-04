@@ -36,6 +36,12 @@ export default {
     const password = ref('');
 
     const signInn = async () => {
+      const value = await checkCurrentUser();
+      if(value != null)
+      {
+        await router.push("/expenses");
+        return;
+      }
       try {
         const input = {
           username: username.value,
