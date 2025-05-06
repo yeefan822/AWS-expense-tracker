@@ -79,6 +79,12 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "subscribeToAlert": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -111,6 +117,30 @@
         {
           "category": "function",
           "resourceName": "getMonthlyExpenses"
+        }
+      ]
+    },
+    "AMPLIFY_function_subscribeToAlert_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "subscribeToAlert"
+        }
+      ]
+    },
+    "AMPLIFY_function_subscribeToAlert_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "subscribeToAlert"
+        }
+      ]
+    },
+    "AMPLIFY_function_subscribeToAlert_snsTopicArn": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "subscribeToAlert"
         }
       ]
     }

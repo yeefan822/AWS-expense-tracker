@@ -1,0 +1,10 @@
+{
+  "permissions": {},
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "snsTopicArn",
+      "environmentVariableName": "SNS_TOPIC_ARN"
+    }
+  ]
+}

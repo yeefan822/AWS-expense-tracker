@@ -24,6 +24,11 @@
           "s3Key": "amplify-builds/getMonthlyExpenses-483354436f5165544358-build.zip",
           "snsTopicArn": "arn:aws:sns:eu-west-1:746470358053:spendingAlerts",
           "tableName": "Expense-vv5crm6kdnhvvi6fhpjnzync3y-dev"
+        },
+        "subscribeToAlert": {
+          "deploymentBucketName": "amplify-awsexpensetracker-dev-ceefa-deployment",
+          "s3Key": "amplify-builds/subscribeToAlert-34357361347355644749-build.zip",
+          "snsTopicArn": "arn:aws:sns:eu-west-1:746470358053:spendingAlerts"
         }
       },
       "storage": {
